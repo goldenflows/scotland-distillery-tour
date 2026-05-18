@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>위스키 성지 여행 | 스코틀랜드 증류소 투어</title>
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&amp;display=swap" rel="stylesheet">
+    
+    <!-- Tailwind & Iconify -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Pretendard', 'system-ui', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fdf8f3',
+                            100: '#faecd9',
+                            200: '#f6d8b3',
+                            300: '#f1bd84',
+                            400: '#eb9b50',
+                            500: '#e57e24',
+                            600: '#d7641a',
+                            700: '#b24a18',
+                            800: '#8e3a19',
+                            900: '#733217',
+                            950: '#41180a',
+                        },
+                        surface: '#0a0a0a',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { background-color: #050505; color: #f3f4f6; }
+        .break-keep { word-break: keep-all; }
+        
+        /* Noise Texture */
+        .noise-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 100ms; }
+        .reveal-delay-2 { transition-delay: 200ms; }
+        .reveal-delay-3 { transition-delay: 300ms; }
+
+        /* Double Bezel Glass Card */
+        .glass-shell {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.375rem;
+            border-radius: 2rem;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+        .glass-core {
+            background: rgba(10, 10, 10, 0.6);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            border-radius: calc(2rem - 0.375rem);
+            height: 100%;
+        }
+
+        /* Ambient Glow */
+        .ambient-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(229,126,36,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #fde047, #e57e24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-500/30 selection:text-white">
+    <div class="noise-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-6 left-0 right-0 z-50 flex justify-center px-4" data-sn-section="nav">
+        <div class="glass-shell flex items-center justify-between px-6 py-3 min-w-[300px] md:min-w-[400px]">
+            <div class="font-serif italic text-lg text-white font-semibold tracking-wide">
+                Whisky Pilgrimages
+            </div>
+            <a href="#cta-section" class="text-sm font-medium bg-white/10 hover:bg-white/20 transition-colors px-4 py-1.5 rounded-full text-white">
+                대기 신청
+            </a>
+        </div>
+    </nav>
+
+    <!-- 1. Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden" data-sn-section="section-2">
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1527281400683-1aae777175f8?auto=format&amp;fit=crop&amp;w=2000&amp;q=80" alt="Scottish Distillery" class="w-full h-full object-cover object-center opacity-40">
+            <div class="absolute inset-0 bg-gradient-to-b from-surface/80 via-surface/60 to-surface"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent h-40 bottom-0"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+            <div class="reveal">
+                <span class="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium tracking-[0.2em] bg-brand-500/10 text-brand-400 border border-brand-500/20 uppercase mb-8">
+                    <iconify-icon icon="solar:star-fall-bold-duotone" class="text-base"></iconify-icon>
+                    Premium Guided Tour
+                </span>
+            </div>
+            
+            <h1 class="reveal reveal-delay-1 text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.1] text-white break-keep mb-6 max-w-5xl mx-auto">
+                스코틀랜드 증류소,<br>
+                <span class="text-white/70">이제 마음껏 마시면서 다녀오세요</span>
+            </h1>
+            
+            <p class="reveal reveal-delay-2 font-serif italic text-xl md:text-3xl text-brand-300 mb-8 tracking-wide">
+                "Where Every Dram Has a Story"
+            </p>
+            
+            <p class="reveal reveal-delay-2 text-lg md:text-xl text-gray-400 leading-relaxed max-w-2xl mx-auto break-keep mb-12">
+                위스키 러버들의 로망, 상상만 하던 완벽한 테이스팅 여정. 현지 운전부터 통역, 예약까지 가이드가 모두 해결해드립니다.
+            </p>
+
+            <a href="#cta-section" class="reveal reveal-delay-3 group relative inline-flex items-center justify-center gap-4 bg-brand-600 text-white rounded-full px-10 py-5 text-lg font-bold transition-all hover:bg-brand-500 hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_40px_rgba(229,126,36,0.3)]">
+                대기 신청하기
+                <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                    <iconify-icon icon="solar:arrow-right-linear" class="text-xl"></iconify-icon>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- 2. Empathy / Pain Point Section -->
+    <section class="relative py-24 md:py-32 lg:py-40 bg-surface" data-sn-section="section-3">
+        <div class="ambient-glow top-0 left-[-200px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-center">
+                
+                <!-- Left: Emotional Hook -->
+                <div class="lg:col-span-5 reveal">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white leading-tight break-keep mb-8">
+                        빙하가 만든 물길,<br>
+                        이탄의 연기.
+                    </h2>
+                    <p class="text-lg md:text-xl text-gray-400 leading-relaxed break-keep mb-8">
+                        그 위대한 위스키를 현지에서 마음껏 마시고 싶었던 적 있으신가요? 하지만 막상 떠나려니 현실적인 벽들이 앞을 가로막습니다.
+                    </p>
+                </div>
+
+                <!-- Right: Pain Points Grid (Asymmetric Bento) -->
+                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    
+                    <!-- Card 1 -->
+                    <div class="glass-shell reveal reveal-delay-1 sm:col-span-2">
+                        <div class="glass-core p-6 md:p-8 flex gap-6 items-start">
+                            <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center shrink-0 border border-amber-500/20">
+                                <iconify-icon icon="solar:steering-wheel-bold-duotone" class="text-2xl text-amber-400"></iconify-icon>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">운전의 딜레마</h3>
+                                <p class="text-gray-400 break-keep">렌트카를 빌리면 운전자 1명은 테이스팅을 전혀 못합니다. 음주운전은 스코틀랜드에서도 엄격히 금지됩니다.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="glass-shell reveal reveal-delay-2">
+                        <div class="glass-core p-6 flex flex-col gap-4">
+                            <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+                                <iconify-icon icon="solar:users-group-rounded-bold-duotone" class="text-2xl text-gray-300"></iconify-icon>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">동행 구하기</h3>
+                            <p class="text-sm text-gray-400 break-keep">위스키 매니아가 아닌 지인과 긴 여정을 맞추는 것은 현실적으로 너무 어렵습니다.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 & 4 Stacked -->
+                    <div class="flex flex-col gap-4 reveal reveal-delay-3">
+                        <div class="glass-shell h-full">
+                            <div class="glass-core p-6 flex gap-4 items-center">
+                                <iconify-icon icon="solar:routing-2-bold-duotone" class="text-2xl text-gray-300 shrink-0"></iconify-icon>
+                                <p class="text-sm text-gray-400 break-keep">증류소 간 먼 거리, 막막한 동선 계획</p>
+                            </div>
+                        </div>
+                        <div class="glass-shell h-full">
+                            <div class="glass-core p-6 flex gap-4 items-center">
+                                <iconify-icon icon="solar:chat-round-line-bold-duotone" class="text-2xl text-gray-300 shrink-0"></iconify-icon>
+                                <p class="text-sm text-gray-400 break-keep">전문 용어가 난무하는 영어 투어의 장벽</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Journey Map Section (Full bleed image with overlaid text) -->
+    <section class="relative py-32 md:py-40 border-y border-white/5 bg-surface" data-sn-section="section-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight break-keep mb-6">
+                    유명한 곳 한두 군데?<br>
+                    <span class="text-brand-400">우리는 스코틀랜드 전체를 다닙니다.</span>
+                </h2>
+                <p class="text-xl text-gray-400 font-serif italic">Covering all 5 Whisky Regions</p>
+            </div>
+
+            <!-- Map Visualization (Z-Axis Cascade concept via overlapping cards) -->
+            <div class="relative h-[600px] rounded-[3rem] overflow-hidden border border-white/10 group">
+                <img src="https://images.unsplash.com/photo-1469521669194-babbdf9aa9b2?auto=format&amp;fit=crop&amp;w=1600&amp;q=80" alt="Highland landscape" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-50">
+                <div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/50 to-transparent"></div>
+                
+                <div class="absolute inset-0 p-8 md:p-16 flex flex-col justify-center">
+                    <div class="space-y-4 max-w-sm">
+                        <!-- Region Tags -->
+                        <div class="glass-shell reveal shadow-2xl translate-x-0 hover:translate-x-4 transition-transform duration-500">
+                            <div class="glass-core p-4 flex items-center justify-between">
+                                <span class="font-bold text-white text-lg">Highland</span>
+                                <iconify-icon icon="solar:map-point-bold" class="text-brand-400"></iconify-icon>
+                            </div>
+                        </div>
+                        <div class="glass-shell reveal reveal-delay-1 shadow-2xl translate-x-4 hover:translate-x-8 transition-transform duration-500">
+                            <div class="glass-core p-4 flex items-center justify-between">
+                                <span class="font-bold text-white text-lg">Speyside</span>
+                                <iconify-icon icon="solar:map-point-bold" class="text-brand-400"></iconify-icon>
+                            </div>
+                        </div>
+                        <div class="glass-shell reveal reveal-delay-2 shadow-2xl translate-x-8 hover:translate-x-12 transition-transform duration-500">
+                            <div class="glass-core p-4 flex items-center justify-between">
+                                <span class="font-bold text-white text-lg">Islay</span>
+                                <iconify-icon icon="solar:map-point-bold" class="text-brand-400"></iconify-icon>
+                            </div>
+                        </div>
+                        <div class="glass-shell reveal reveal-delay-3 shadow-2xl translate-x-12 hover:translate-x-16 transition-transform duration-500">
+                            <div class="glass-core p-4 flex items-center justify-between">
+                                <span class="font-bold text-white text-lg">Lowland &amp; Campbeltown</span>
+                                <iconify-icon icon="solar:map-point-bold" class="text-brand-400"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Solutions (Scarcity Framing) - Editorial Layout -->
+    <section class="py-24 md:py-32 bg-[#080808]" data-sn-section="section-5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32">
+            
+            <!-- Item 1 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1 reveal">
+                    <span class="text-brand-500 font-bold tracking-widest text-sm uppercase mb-4 block">Exclusive Route</span>
+                    <h2 class="text-3xl md:text-5xl font-bold text-white leading-tight break-keep mb-6">
+                        현지 유경험자만 아는<br>루트로 안내합니다.
+                    </h2>
+                    <p class="text-lg text-gray-400 leading-relaxed break-keep mb-8">
+                        일반 여행사에서는 접근하기 힘든 소규모 크래프트 증류소부터, 전 세계 위스키 팬들이 열광하는 성지까지. 수십 번의 답사를 통해 완성된 완벽한 동선을 제공합니다.
+                    </p>
+                </div>
+                <div class="order-1 lg:order-2 glass-shell p-2 reveal">
+                    <div class="relative rounded-[1.75rem] overflow-hidden aspect-[4/3]">
+                        <img src="https://images.unsplash.com/photo-1594924294025-a131b2e69312?auto=format&amp;fit=crop&amp;w=1000&amp;q=80" alt="Casks" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="glass-shell p-2 reveal">
+                    <div class="relative rounded-[1.75rem] overflow-hidden aspect-[4/3]">
+                        <img src="https://images.unsplash.com/photo-1582229562768-e4b52f9b87bc?auto=format&amp;fit=crop&amp;w=1000&amp;q=80" alt="Whisky Tasting" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="reveal">
+                    <span class="text-brand-500 font-bold tracking-widest text-sm uppercase mb-4 block">Zero Driving</span>
+                    <h2 class="text-3xl md:text-5xl font-bold text-white leading-tight break-keep mb-6">
+                        증류소에서 직접 마시고 싶다면,<br>운전은 저한테 맡기세요.
+                    </h2>
+                    <p class="text-lg text-gray-400 leading-relaxed break-keep mb-8">
+                        당신은 그저 창밖의 하이랜드 풍경을 감상하며, 매 방문마다 주어지는 귀한 테이스팅 잔을 온전히 즐기시면 됩니다. 전 일정 이동은 저희가 책임집니다.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 5. Benefits Grid -->
+    <section class="py-24 md:py-32 bg-surface relative overflow-hidden" data-sn-section="section-6">
+    <div class="ambient-glow bottom-0 right-[-200px]"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">비교할수록 확실한 선택</h2>
+            <p class="text-gray-400">오직 위스키에만 집중할 수 있는 완벽한 여정을 약속합니다.</p>
+        </div>
+
+        <div class="glass-shell reveal overflow-hidden">
+            <div class="glass-core overflow-x-auto">
+                <table class="w-full text-sm md:text-base text-left border-collapse min-w-[1000px]">
+                    <thead>
+                        <tr class="border-b border-white/10 bg-white/5">
+                            <th class="p-6 font-bold text-brand-400">비교 항목</th>
+                            <th class="p-6 font-bold text-gray-300">셀프 자유 여행</th>
+                            <th class="p-6 font-bold text-gray-300">일반 여행사 상품</th>
+                            <th class="p-6 font-bold text-gray-300">해외 현지 투어<br><span class="text-xs font-normal opacity-60">(영어 진행)</span></th>
+                            <th class="p-6 font-bold text-brand-500 bg-brand-500/10">위스키 성지 여행<br><span class="text-xs font-normal opacity-80">(전문가 동행)</span></th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-400">
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-semibold text-white">개념</td>
+                            <td class="p-6">나 홀로 정보 수집 및 이동</td>
+                            <td class="p-6">대형 여행사의 패키지 패키지</td>
+                            <td class="p-6">해외 증류소/도시 현지 투어</td>
+                            <td class="p-6 text-brand-200 bg-brand-500/5 font-medium">위스키 유튜버&amp;바텐더 밀착 케어</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-semibold text-white">언어 및 소통</td>
+                            <td class="p-6">언어 장벽 및 정보 검색 한계</td>
+                            <td class="p-6">한국어 가이드 (전문성 낮음)</td>
+                            <td class="p-6">100% 영어 진행 (소통 답답함)</td>
+                            <td class="p-6 text-brand-200 bg-brand-500/5 font-medium">한국어 완벽 소통 + 전문 통역 지원</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-semibold text-white">예약 난이도</td>
+                            <td class="p-6">증류소/숙소/교통 직접 예약 (매우 지난함)</td>
+                            <td class="p-6">여행사 대행 (일정 변경 불가)</td>
+                            <td class="p-6">해외 사이트 직접 예약 및 조율</td>
+                            <td class="p-6 text-brand-200 bg-brand-500/5 font-medium">모든 까다로운 예약 및 동선 대행</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-semibold text-white">위스키 전문성</td>
+                            <td class="p-6">본인이 아는 만큼만 보임</td>
+                            <td class="p-6">단순 관광지 위주, 깊이 없음</td>
+                            <td class="p-6">현지 가이드 설명 (영어 리스닝 장벽)</td>
+                            <td class="p-6 text-brand-200 bg-brand-500/5 font-medium">유튜버의 테이스팅 및 디스틸러리 분석</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-semibold text-white">일정 유연성</td>
+                            <td class="p-6">자유로우나 동선 낭비 위험 큼</td>
+                            <td class="p-6">쇼핑 옵션 및 정해진 대형 버스 이동</td>
+                            <td class="p-6">정해진 타임라인대로만 움직임</td>
+                            <td class="p-6 text-brand-200 bg-brand-500/5 font-medium">소수 정예 맞춤형 유연한 히든 스폿 투어</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-semibold text-white">커뮤니티 효과</td>
+                            <td class="p-6">혼자 혹은 일행끼리만 소소하게</td>
+                            <td class="p-6">어색하고 서먹한 단체 관광객</td>
+                            <td class="p-6">전 세계 외국인들과 얕은 대화</td>
+                            <td class="p-6 text-brand-200 bg-brand-500/5 font-medium">위스키 취향을 공유하는 끈끈한 네트워킹</td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-semibold text-white">돌발 상황 대처</td>
+                            <td class="p-6">예약 취소, 교통 체증 시 독박 부담</td>
+                            <td class="p-6">여행사 지침에 따라 수동적 대처</td>
+                            <td class="p-6">언어 소통 불가 시 현장 대처 어려움</td>
+                            <td class="p-6 text-brand-200 bg-brand-500/5 font-medium">베테랑 호스트의 실시간 현지 케어</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="mt-8 flex items-center justify-center gap-2 text-gray-500 text-sm reveal reveal-delay-1">
+            <iconify-icon icon="solar:info-circle-bold-duotone" class="text-lg"></iconify-icon>
+            <p>표를 좌우로 밀어서 전체 내용을 확인하실 수 있습니다.</p>
+        </div>
+    </div>
+</section>
+
+    <!-- 6. Guide Profile (Editorial Split) -->
+    <section class="py-24 md:py-32 bg-zinc-950 border-t border-white/5" data-sn-section="section-7">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <!-- Left: Big Portrait -->
+                <div class="reveal">
+                    <div class="glass-shell p-2 w-full max-w-md mx-auto lg:max-w-none">
+                        <div class="relative rounded-[1.75rem] overflow-hidden aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&amp;fit=crop&amp;w=1000&amp;q=80" alt="Guide Profile" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-8 left-8">
+                                <p class="font-serif text-brand-300 italic text-xl mb-1">Tour Director</p>
+                                <h3 class="text-4xl font-bold text-white">하윤서</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Credentials -->
+                <div class="space-y-12 reveal reveal-delay-1">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-white leading-tight break-keep mb-6">
+                            단순한 가이드가 아닌,<br>위스키 전문가와 함께합니다.
+                        </h2>
+                        <p class="text-lg text-gray-400 leading-relaxed break-keep">
+                            현지 사정에 밝은 위스키 유튜버이자 앰배서더가 직접 여정을 기획하고 인솔합니다. 깊이 있는 지식과 풍부한 경험으로 여러분의 여행을 완벽하게 서포트합니다.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="flex items-start gap-4">
+                            <iconify-icon icon="solar:play-circle-bold" class="text-2xl text-brand-500 mt-1"></iconify-icon>
+                            <div>
+                                <h4 class="font-bold text-white">위스키 유튜버</h4>
+                                <p class="text-sm text-gray-400 mt-1">채널명 '위스키성지여행' 운영</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <iconify-icon icon="solar:map-bold" class="text-2xl text-brand-500 mt-1"></iconify-icon>
+                            <div>
+                                <h4 class="font-bold text-white">30+ 증류소 방문</h4>
+                                <p class="text-sm text-gray-400 mt-1">스코틀랜드 현지 직접 답사 완료</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <iconify-icon icon="solar:medal-ribbon-star-bold" class="text-2xl text-brand-500 mt-1"></iconify-icon>
+                            <div>
+                                <h4 class="font-bold text-white">브랜드 앰배서더</h4>
+                                <p class="text-sm text-gray-400 mt-1">Kavalan 공식 앰배서더 활동</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <iconify-icon icon="solar:cup-star-bold" class="text-2xl text-brand-500 mt-1"></iconify-icon>
+                            <div>
+                                <h4 class="font-bold text-white">전문 자격 보유</h4>
+                                <p class="text-sm text-gray-400 mt-1">조주기능사 자격증 및 클래스 다수</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Comparison Table (Clean Structural layout - Dark mode adapted) -->
+    <section class="py-24 md:py-32 bg-surface" data-sn-section="section-8">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">왜 '위스키 성지 여행'이어야 할까요?</h2>
+            </div>
+
+            <div class="glass-shell reveal overflow-hidden">
+                <div class="glass-core p-1 md:p-4">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
+                            <thead>
+                                <tr>
+                                    <th class="p-6 text-gray-400 font-medium w-1/4"></th>
+                                    <th class="p-6 text-gray-300 font-bold w-1/4 text-center">일반 여행사</th>
+                                    <th class="p-6 text-gray-300 font-bold w-1/4 text-center">영어 전문 투어</th>
+                                    <th class="p-6 text-brand-400 font-bold w-1/4 text-center text-lg bg-white/5 rounded-t-2xl border-t border-x border-white/10">위스키성지여행</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5">
+                                <tr>
+                                    <td class="p-6 text-white font-medium">위스키 전문성</td>
+                                    <td class="p-6 text-center"><iconify-icon icon="solar:close-circle-line-duotone" class="text-2xl text-gray-600"></iconify-icon></td>
+                                    <td class="p-6 text-center"><iconify-icon icon="solar:minus-circle-line-duotone" class="text-2xl text-gray-400"></iconify-icon></td>
+                                    <td class="p-6 text-center bg-white/5 border-x border-white/10"><iconify-icon icon="solar:check-circle-bold" class="text-2xl text-brand-500"></iconify-icon></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-6 text-white font-medium">한국어 가이드</td>
+                                    <td class="p-6 text-center"><iconify-icon icon="solar:close-circle-line-duotone" class="text-2xl text-gray-600"></iconify-icon></td>
+                                    <td class="p-6 text-center"><iconify-icon icon="solar:close-circle-line-duotone" class="text-2xl text-gray-600"></iconify-icon></td>
+                                    <td class="p-6 text-center bg-white/5 border-x border-white/10"><iconify-icon icon="solar:check-circle-bold" class="text-2xl text-brand-500"></iconify-icon></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-6 text-white font-medium">전 일정 운전 해결</td>
+                                    <td class="p-6 text-center"><iconify-icon icon="solar:minus-circle-line-duotone" class="text-2xl text-gray-400"></iconify-icon></td>
+                                    <td class="p-6 text-center"><iconify-icon icon="solar:minus-circle-line-duotone" class="text-2xl text-gray-400"></iconify-icon></td>
+                                    <td class="p-6 text-center bg-white/5 border-x border-white/10"><iconify-icon icon="solar:check-circle-bold" class="text-2xl text-brand-500"></iconify-icon></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-6 text-white font-medium">5대 생산지 투어</td>
+                                    <td class="p-6 text-center"><iconify-icon icon="solar:minus-circle-line-duotone" class="text-2xl text-gray-400"></iconify-icon></td>
+                                    <td class="p-6 text-center"><iconify-icon icon="solar:minus-circle-line-duotone" class="text-2xl text-gray-400"></iconify-icon></td>
+                                    <td class="p-6 text-center bg-white/5 border-x border-white/10"><iconify-icon icon="solar:check-circle-bold" class="text-2xl text-brand-500"></iconify-icon></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-6 text-white font-medium border-b-transparent">프라이빗 맞춤</td>
+                                    <td class="p-6 text-center border-b-transparent"><iconify-icon icon="solar:close-circle-line-duotone" class="text-2xl text-gray-600"></iconify-icon></td>
+                                    <td class="p-6 text-center border-b-transparent"><iconify-icon icon="solar:close-circle-line-duotone" class="text-2xl text-gray-600"></iconify-icon></td>
+                                    <td class="p-6 text-center bg-white/5 rounded-b-2xl border-b border-x border-white/10"><iconify-icon icon="solar:check-circle-bold" class="text-2xl text-brand-500"></iconify-icon></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Target Audience (Minimalist List) -->
+    <section class="py-20 bg-zinc-950 border-t border-white/5" data-sn-section="section-9">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+            <h3 class="text-2xl md:text-3xl font-bold text-white mb-10">이런 분들께 가장 완벽한 여행이 될 것입니다</h3>
+            <ul class="space-y-6 text-lg text-gray-300">
+                <li class="flex items-center justify-center gap-3">
+                    <iconify-icon icon="solar:star-bold" class="text-brand-500"></iconify-icon>
+                    위스키를 사랑하지만 스코틀랜드 여행은 엄두를 못 내셨던 분
+                </li>
+                <li class="flex items-center justify-center gap-3">
+                    <iconify-icon icon="solar:star-bold" class="text-brand-500"></iconify-icon>
+                    증류소에서 마음 편히 실컷 테이스팅하고 싶으신 분
+                </li>
+                <li class="flex items-center justify-center gap-3">
+                    <iconify-icon icon="solar:star-bold" class="text-brand-500"></iconify-icon>
+                    상업적인 패키지가 아닌 '진짜 위스키 여행'을 원하시는 분
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 9. CTA Section -->
+    <section id="cta-section" class="relative py-32 md:py-40 bg-surface overflow-hidden flex items-center justify-center min-h-[80vh]" data-sn-section="cta">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1527018601619-a508a2be00cd?auto=format&amp;fit=crop&amp;w=2000&amp;q=80" alt="Dark Whisky Glass" class="w-full h-full object-cover opacity-20">
+            <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/90 to-surface/80"></div>
+        </div>
+
+        <div class="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
+            <div class="glass-shell reveal">
+                <div class="glass-core p-10 md:p-16 flex flex-col items-center">
+                    <iconify-icon icon="solar:letter-opened-bold-duotone" class="text-5xl text-brand-400 mb-6"></iconify-icon>
+                    <h2 class="text-3xl md:text-5xl font-bold text-white leading-tight break-keep mb-6">
+                        지금 대기 신청하고<br>가장 먼저 소식 받아보세요
+                    </h2>
+                    <p class="text-gray-400 mb-10 break-keep">
+                        소규모 프라이빗 투어 특성상 조기 마감될 수 있습니다. 희망하시는 일정을 선택해 주시면 우선적으로 안내해 드립니다.
+                    </p>
+
+                    <!-- Simulated Schedule Buttons for UI -->
+                    <div class="flex flex-wrap justify-center gap-4 mb-10 w-full">
+                        <button class="bg-white/5 hover:bg-brand-500/20 border border-white/10 hover:border-brand-500/50 text-white px-6 py-3 rounded-xl transition-colors font-medium">
+                            2024년 9월 일정
+                        </button>
+                        <button class="bg-white/5 hover:bg-brand-500/20 border border-white/10 hover:border-brand-500/50 text-white px-6 py-3 rounded-xl transition-colors font-medium">
+                            2024년 10월 일정
+                        </button>
+                        <button class="bg-white/5 hover:bg-brand-500/20 border border-white/10 hover:border-brand-500/50 text-white px-6 py-3 rounded-xl transition-colors font-medium">
+                            추후 일정 안내 받기
+                        </button>
+                    </div>
+
+                    <a href="#" class="w-full group relative inline-flex items-center justify-center gap-3 bg-brand-600 text-white rounded-full px-8 py-5 text-lg font-bold transition-all hover:bg-brand-500 hover:scale-[1.02] active:scale-[0.98]">
+                        구글폼으로 대기 신청하기
+                        <iconify-icon icon="solar:arrow-right-up-linear" class="text-xl"></iconify-icon>
+                    </a>
+                    
+                    <p class="mt-6 text-sm text-gray-500">맞춤 일정 및 기업 단체 문의도 환영합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-surface border-t border-white/5 text-center" data-sn-section="footer">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+            <h2 class="font-serif italic text-2xl text-white mb-6">Whisky Pilgrimages</h2>
+            <div class="flex gap-6 mb-8 text-gray-400">
+                <a href="#" class="hover:text-brand-400 transition-colors"><iconify-icon icon="solar:videocamera-record-bold" class="text-2xl"></iconify-icon></a>
+                <a href="#" class="hover:text-brand-400 transition-colors"><iconify-icon icon="solar:letter-bold" class="text-2xl"></iconify-icon></a>
+            </div>
+            <p class="text-gray-600 text-sm">
+                © 2024 위스키 성지 여행. All rights reserved.<br>
+                본 페이지는 유튜버가 직접 기획하고 운영하는 투어 서비스 안내 페이지입니다.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Intersection Observer Script for Scroll Animations -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+
+</body></html>
